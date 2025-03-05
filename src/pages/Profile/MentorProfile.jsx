@@ -92,6 +92,7 @@ const MentorProfile = () => {
                                 onUpdate={handleProfileUpdate}
                             />
 
+
                             {/* Add other profile sections here */}
                         </StructuredListBody>
                     </StructuredListWrapper>
