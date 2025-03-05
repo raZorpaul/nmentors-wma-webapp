@@ -1,0 +1,137 @@
+// MentorProfile.scss
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+@use '@carbon/styles/scss/theme' as *;
+
+.mentor-profile-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: $background;
+}
+
+.mentor-profile-content {
+  display: flex;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: $spacing-05;
+  margin-top: $spacing-10;
+  gap: $spacing-05;
+
+  @include breakpoint(md) {
+    padding: $spacing-06 $spacing-07;
+  }
+
+  .sidebar {
+    flex: 0 0 250px;
+    position: sticky;
+    top: 48px; // Adjust based on your header height
+    height: fit-content;
+    background-color: $layer-02;
+    border-radius: $spacing-02;
+  }
+
+  .main-content {
+    flex: 1;
+    min-width: 0;
+    background-color: $layer-02;
+    border-radius: $spacing-02;
+
+    .profile-section-title {
+      @include type-style('heading-03');
+      color: $text-primary;
+      padding: $spacing-05;
+      margin: 0;
+      border-bottom: 1px solid $border-subtle-01;
+    }
+
+    // MentorProfile.scss
+// ... (keep the existing styles up to .cds--structured-list)
+
+.cds--structured-list {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  width: 100%; // Ensure full width
+
+  .cds--structured-list-tbody {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    > * {
+      margin-bottom: $spacing-10;
+    }
+
+    .cds--structured-list-row {
+      border-bottom: 1px solid $border-subtle-01;
+      display: flex;
+      width: 100%;
+      padding: $spacing-05;
+      align-items: center;
+
+      &:hover {
+        background-color: $layer-hover;
+      }
+
+      .cds--structured-list-td {
+        padding: 0; // Remove default padding
+
+        &:first-of-type {
+          width: 200px;
+          flex-shrink: 0;
+          color: $text-secondary;
+        }
+
+        &:nth-of-type(2) {
+          flex: 1;
+          padding: 0 $spacing-05;
+        }
+
+        &:last-of-type {
+          width: 48px; // Fixed width for edit button
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+
+      // Editing state styles
+      &.editing {
+        flex-direction: column;
+        padding: $spacing-05;
+
+        .cds--structured-list-td {
+          width: 100% !important; // Force full width in edit mode
+          padding: 0 !important;
+
+          &:not(:first-child) {
+            margin-top: $spacing-05;
+          }
+
+          .edit-container {
+            width: 100%;
+
+            .edit-header {
+              margin-bottom: $spacing-03;
+              color: $text-secondary;
+            }
+
+            .cds--text-input {
+              width: 100%;
+              margin: $spacing-05 0;
+            }
+
+            .button-group {
+              display: flex;
+              gap: $spacing-03;
+              justify-content: flex-start;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+  }
+}
