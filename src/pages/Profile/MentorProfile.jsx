@@ -3,7 +3,7 @@ import {useState, useEffect} from "react";
 import {toast} from "react-toastify";
 import mentorService from "../../services/mentorService.js";
 import BasicInfoSection from "../../components/Sections/BasicInfoSection/BasicInfoSection.jsx";
-import {mentorData} from "../../mentorData.js";
+// import {mentorData} from "../../mentorData.js";
 import {StructuredListBody, StructuredListWrapper} from "@carbon/react";
 import HeaderComponent from "../../components/Header with  Navigation/HeaderComponent.jsx";
 import './MentorProfile.scss'
