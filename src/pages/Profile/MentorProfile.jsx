@@ -3,10 +3,11 @@ import {useState, useEffect} from "react";
 import {toast} from "react-toastify";
 import mentorService from "../../services/mentorService.js";
 import BasicInfoSection from "../../components/Sections/BasicInfoSection/BasicInfoSection.jsx";
-import {mentorData} from "../../mentorData.js";
+// import {mentorData} from "../../mentorData.js";
 import {StructuredListBody, StructuredListWrapper} from "@carbon/react";
 import HeaderComponent from "../../components/Header with  Navigation/HeaderComponent.jsx";
 import './MentorProfile.scss'
+import LocationSection from "../../components/Sections/LocationSection.jsx";
 
 const MentorProfile = () => {
     const [profileData, setProfileData] = useState({
@@ -15,6 +16,9 @@ const MentorProfile = () => {
         phone: "",
         country: "",
         nida: "",
+        expertise: [],
+        location_of_work: "",
+        location_of_residence: "",
         passport_no: ""
     });
     const [loading, setLoading] = useState(true);
@@ -74,6 +78,17 @@ const MentorProfile = () => {
                         <StructuredListBody>
                             <BasicInfoSection
                                 data={profileData}
+                                onUpdate={handleProfileUpdate}
+                            />
+                            <LocationSection
+                                title={"Location of Work"}
+                                data={profileData.location_of_work}
+                                onUpdate={handleProfileUpdate}
+                            />
+
+                            <LocationSection
+                                title={"Location of Residence"}
+                                data={profileData.location_of_residence}
                                 onUpdate={handleProfileUpdate}
                             />
 
