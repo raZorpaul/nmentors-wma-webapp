@@ -56,7 +56,7 @@ export const LogInForm = () => {
                     <Column>
                         <TextInput
                             id="email"
-                            labelText="Admin Email"
+                            labelText="Mentor Email"
                             name="email"
                             placeholder="Enter your email"
                             value={formData.email}
