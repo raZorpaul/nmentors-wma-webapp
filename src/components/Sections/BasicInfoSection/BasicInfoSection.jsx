@@ -1,6 +1,6 @@
 // sections/BasicInfoSection.jsx
-import EditableField from "../EditableField/EditableField";
 import './BasicInfoSection.scss'
+import EditableField from "../../EditableField/EditableField.jsx";
 const BasicInfoSection = ({ data, onUpdate }) => {
   const handleFieldUpdate = (field, value) => {
     onUpdate({
