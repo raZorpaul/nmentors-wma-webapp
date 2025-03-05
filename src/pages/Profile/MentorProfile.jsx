@@ -1,15 +1,8 @@
 // MentorProfile.jsx
 import { useState } from "react";
 import { StructuredListBody, StructuredListWrapper } from "@carbon/react";
-import BasicInfoSection from "../sections/BasicInfoSection";
-import LocationSection from "../sections/LocationSection.jsx";
-import EmergencyContactSection from "../sections/EmergencyContactSection";
-import EducationSection from "../sections/EducationSection";
-import CertificationsSection from "../sections/CertificationsSection";
-import HobbiesSection from "../sections/HobbiesSection";
 import "./MentorProfile.scss";
 import HeaderComponent from "../Header with Navigation/HeaderComponent.jsx";
-import ProfileSidebar from "../ProfileSideBar/ProfileSidebar.jsx";
 
 const MentorProfile = ({ initialData }) => {
   const [mentorData, setMentorData] = useState(initialData);
