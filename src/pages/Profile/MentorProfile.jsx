@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { StructuredListBody, StructuredListWrapper } from "@carbon/react";
 import "./MentorProfile.scss";
-import HeaderComponent from "../Header with Navigation/HeaderComponent.jsx";
+import HeaderComponent from "../../components/Header with  Navigation/HeaderComponent.jsx";
+import BasicInfoSection from "../../components/Sections/BasicInfoSection/BasicInfoSection.jsx";
 
 const MentorProfile = ({ initialData }) => {
   const [mentorData, setMentorData] = useState(initialData);
@@ -30,35 +31,6 @@ const MentorProfile = ({ initialData }) => {
                 onUpdate={(newData) => handleUpdateSection("basicInfo", newData)}
               />
 
-              <LocationSection
-                data={mentorData.locationOfResidence}
-                title="Location Of Residence"
-                onUpdate={(newData) => handleUpdateSection("location", newData)}
-                />
-
-              <LocationSection
-                data={mentorData.locationOfWork}
-                title="Location Of Work"
-                onUpdate={(newData) => handleUpdateSection("location", newData)}
-                />
-
-              <CertificationsSection
-                data={mentorData.certifications}
-                title="Certifications"
-                onUpdate={(newData) => handleUpdateSection("certifications", newData)}
-                />
-
-              <HobbiesSection
-                data={mentorData.hobbies}
-                title="Hobbies"
-                onUpdate={(newData) => handleUpdateSection("hobbies", newData)}
-                />
-
-              <EmergencyContactSection
-                data={mentorData.emergencyContact}
-                title="Emergency Contact"
-                onUpdate={(newData) => handleUpdateSection("emergencyContact", newData)}
-                />
             </StructuredListBody>
           </StructuredListWrapper>
         </main>
