@@ -1,0 +1,26 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/type' as *;
+@use '@carbon/react/scss/breakpoint' as *;
+@use '@carbon/react/scss/theme' as *;
+@use '@carbon/styles/scss/type' as *;
+
+.login-title {
+  margin-bottom: $spacing-05;
+  h1 {
+    font-weight: 400;
+  }
+}
+
+.text-input-15-style {
+  margin-bottom: $spacing-05;
+}
+
+
+
+.button-wrapper {
+  margin-top: $spacing-05;
+
+  button {
+    width: 100%;
+  }
+}

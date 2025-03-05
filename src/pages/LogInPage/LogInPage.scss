@@ -1,0 +1,42 @@
+@use "@carbon/react" with (
+  $use-flexbox-grid: true
+);
+
+
+
+.login-row {
+  display: flex;
+  flex-direction: row;
+}
+  .login-canvas {
+    background-image: url("https://www.ibm.com/account/ibmidutil/login-ui/img/illustration-final.svg");
+    background-size: cover;
+    background-position: center;
+    height: 95vh;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: center; /* Aligns horizontally (left to right) */
+    align-items: center;
+  }
+
+  .login-column {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+  }
+
+.text-input-21-style {
+  margin-bottom: 16px;
+}
+.text-input-22-style {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 1056px ) {
+ .login-canvas{
+   display: none;
+ }
+}
