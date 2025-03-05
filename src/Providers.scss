@@ -1,0 +1,13 @@
+@use '@carbon/styles/index' as *;
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/type' as *;
+@use '@carbon/react/scss/breakpoint' as *;
+@use '@carbon/react/scss/theme' as *;
+
+main {
+  margin-top: $spacing-09;
+}
+
+// Import Carbon's theme tokens
+//@use '@carbon/themes/scss/themes';
+

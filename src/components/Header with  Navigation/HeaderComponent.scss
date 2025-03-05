@@ -1,0 +1,11 @@
+@use '@carbon/react/scss/spacing' as *;
+
+.content-container {
+  margin: 0 $spacing-13;
+  width: calc(100% - (2 * $spacing-13));
+}
+
+// Override Carbon's default header padding
+:global(.cds--header) {
+  padding: 0 $spacing-13;
+}
