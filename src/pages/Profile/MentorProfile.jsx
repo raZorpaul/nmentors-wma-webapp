@@ -1,42 +1,89 @@
 // MentorProfile.jsx
-import { useState } from "react";
-import { StructuredListBody, StructuredListWrapper } from "@carbon/react";
-import "./MentorProfile.scss";
-import HeaderComponent from "../../components/Header with  Navigation/HeaderComponent.jsx";
+import {useState, useEffect} from "react";
+import {toast} from "react-toastify";
+import mentorService from "../../services/mentorService.js";
 import BasicInfoSection from "../../components/Sections/BasicInfoSection/BasicInfoSection.jsx";
+import {mentorData} from "../../mentorData.js";
+import {StructuredListBody, StructuredListWrapper} from "@carbon/react";
+import HeaderComponent from "../../components/Header with  Navigation/HeaderComponent.jsx";
+import './MentorProfile.scss'
 
-const MentorProfile = ({ initialData }) => {
-  const [mentorData, setMentorData] = useState(initialData);
+const MentorProfile = () => {
+    const [profileData, setProfileData] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        country: "",
+        nida: "",
+        passport_no: ""
+    });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  const handleUpdateSection = (section, newData) => {
-    setMentorData((prev) => ({
-      ...prev,
-      [section]: newData,
-    }));
-  };
+    useEffect(() => {
+        fetchProfileData();
+    }, []);
 
-  return (
-    <div className="mentor-profile-container">
-      <HeaderComponent />
-      <div className="mentor-profile-content">
-        {/*<aside className="sidebar">*/}
-        {/*  <ProfileSidebar />*/}
-        {/*</aside>*/}
-        <main className="main-content">
-          {/*<h2 className="profile-section-title">Basic Information</h2>*/}
-          <StructuredListWrapper>
-            <StructuredListBody>
-              <BasicInfoSection
-                data={mentorData.basicInfo}
-                onUpdate={(newData) => handleUpdateSection("basicInfo", newData)}
-              />
+    const fetchProfileData = async () => {
+        try {
+            setLoading(true);
+            const data = await mentorService.getMentorProfile();
+            setProfileData(data);
+            setError(null);
+        } catch (error) {
+            console.error("Error fetching profile:", error);
+            setError(error.message);
+            toast.error("Could not load profile data");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-            </StructuredListBody>
-          </StructuredListWrapper>
-        </main>
-      </div>
-    </div>
-  );
+    const handleProfileUpdate = async (updateData) => {
+        try {
+            setLoading(true);
+            const updatedProfile = await mentorService.updateMentorProfile(updateData);
+            setProfileData(updatedProfile);
+            toast.success("Profile updated successfully");
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            toast.error("Failed to update profile");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading && !profileData.name) {
+        return <div>Loading profile data...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
+    return (
+        <div className="mentor-profile-container">
+            <HeaderComponent/>
+            <div className="mentor-profile-content">
+                {/*<aside className="sidebar">*/}
+                {/*  <ProfileSidebar />*/}
+                {/*</aside>*/}
+                <main className="main-content">
+                    {/*<h2 className="profile-section-title">Basic Information</h2>*/}
+                    <StructuredListWrapper>
+                        <StructuredListBody>
+                            <BasicInfoSection
+                                data={profileData}
+                                onUpdate={handleProfileUpdate}
+                            />
+
+                            {/* Add other profile sections here */}
+                        </StructuredListBody>
+                    </StructuredListWrapper>
+                </main>
+            </div>
+        </div>
+    );
 };
 
 export default MentorProfile;

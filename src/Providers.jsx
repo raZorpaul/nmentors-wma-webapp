@@ -7,7 +7,7 @@ const Providers = ({children}) => {
     const location = useLocation();
 
     // Define routes that should NOT have the header
-    const noHeaderRoutes = ['/login'];
+    const noHeaderRoutes = ['/login', '/'];
 
     // Check if the current route is in the noHeaderRoutes list
     const shouldShowHeader = !noHeaderRoutes.includes(location.pathname);

@@ -1,9 +1,11 @@
 import "./LogInForm.scss";
 import React, {useState} from "react";
 import {FlexGrid, Column, Row, TextInput, Button, PasswordInput} from "@carbon/react";
-import {login} from "../../services/authService"; // Import login function
+import {login} from "../../services/authService";
+import {useNavigate} from "react-router-dom"; // Import login function
 
 export const LogInForm = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -32,7 +34,10 @@ export const LogInForm = () => {
 
             if (result.success) {
                 setSuccess(true);
-                // Optionally, you can redirect or update app state here
+
+                setTimeout(() => {
+                    navigate('/dashboard');
+                }, 1500); // Optional: slight delay to show success message
             } else {
                 setError(result.message);
             }
