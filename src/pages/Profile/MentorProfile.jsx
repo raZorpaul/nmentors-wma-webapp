@@ -8,6 +8,9 @@ import {StructuredListBody, StructuredListWrapper} from "@carbon/react";
 import HeaderComponent from "../../components/Header with  Navigation/HeaderComponent.jsx";
 import './MentorProfile.scss'
 import LocationSection from "../../components/Sections/LocationSection.jsx";
+import EducationSection from "../../components/Sections/EducationSection.jsx";
+import {mentorData} from "../../mentorData.js";
+import {prepareProfileForUpdate} from "../../../utils/educationTransformer.js";
 
 const MentorProfile = () => {
     const [profileData, setProfileData] = useState({
@@ -17,9 +20,10 @@ const MentorProfile = () => {
         country: "",
         nida: "",
         expertise: [],
-        location_of_work: "",
+        location_of_work: [],
         location_of_residence: "",
-        passport_no: ""
+        passport_no: "",
+        education: [],
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -31,8 +35,19 @@ const MentorProfile = () => {
     const fetchProfileData = async () => {
         try {
             setLoading(true);
+            // Add cache-busting parameter to prevent browser caching
             const data = await mentorService.getMentorProfile();
-            setProfileData(data);
+            console.log("Raw data from API:", data);
+
+            // Ensure education is always an array
+            const processedData = {
+                ...data,
+                education: Array.isArray(data.education)
+                    ? data.education
+                    : (data.education ? [data.education] : [])
+            };
+
+            setProfileData(processedData);
             setError(null);
         } catch (error) {
             console.error("Error fetching profile:", error);
@@ -43,19 +58,21 @@ const MentorProfile = () => {
         }
     };
 
-    const handleProfileUpdate = async (updateData) => {
-        try {
-            setLoading(true);
-            const updatedProfile = await mentorService.updateMentorProfile(updateData);
-            setProfileData(updatedProfile);
-            toast.success("Profile updated successfully");
-        } catch (error) {
-            console.error("Error updating profile:", error);
-            toast.error("Failed to update profile");
-        } finally {
-            setLoading(false);
-        }
-    };
+const handleProfileUpdate = async (updateData) => {
+    try {
+        setLoading(true);
+        // If we're dealing with an education update specifically
+
+        const updatedProfile = await mentorService.updateMentorProfile(updateData);
+        setProfileData(prevData => ({...prevData, ...updatedProfile}));
+        toast.success("Profile updated successfully");
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        toast.error("Failed to update profile");
+    } finally {
+        setLoading(false);
+    }
+};
 
     if (loading && !profileData.name) {
         return <div>Loading profile data...</div>;
@@ -91,7 +108,6 @@ const MentorProfile = () => {
                                 data={profileData.location_of_residence}
                                 onUpdate={handleProfileUpdate}
                             />
-
 
                             {/* Add other profile sections here */}
                         </StructuredListBody>

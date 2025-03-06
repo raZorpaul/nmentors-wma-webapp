@@ -21,14 +21,11 @@ class MentorService {
   // Get mentor profile
   async getMentorProfile() {
     try {
-      console.log(`${API_URL}/mentors/profile`);
-      console.log(this.getAuthHeader());
       const response = await fetch(`${this.API_URL}/mentors/profile`, {
         method: 'GET',
         headers: this.getAuthHeader()
       });
 
-      console.log(response);
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
@@ -42,6 +39,7 @@ class MentorService {
 
   // Update mentor profile
   async updateMentorProfile(updates) {
+      console.log("Sending profile update:", JSON.stringify(updates));
     try {
       const response = await fetch(`${this.API_URL}/mentors/profile`, {
         method: 'PUT',
