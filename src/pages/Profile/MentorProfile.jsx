@@ -8,9 +8,8 @@ import {StructuredListBody, StructuredListWrapper} from "@carbon/react";
 import HeaderComponent from "../../components/Header with  Navigation/HeaderComponent.jsx";
 import './MentorProfile.scss'
 import LocationSection from "../../components/Sections/LocationSection.jsx";
-import EducationSection from "../../components/Sections/EducationSection.jsx";
-import {mentorData} from "../../mentorData.js";
-import {prepareProfileForUpdate} from "../../../utils/educationTransformer.js";
+// import EducationSection from "../../components/Sections/EducationSection.jsx";
+import HobbiesSection from "../../components/Sections/HobbiesSection.jsx";
 
 const MentorProfile = () => {
     const [profileData, setProfileData] = useState({
@@ -37,17 +36,9 @@ const MentorProfile = () => {
             setLoading(true);
             // Add cache-busting parameter to prevent browser caching
             const data = await mentorService.getMentorProfile();
-            console.log("Raw data from API:", data);
 
             // Ensure education is always an array
-            const processedData = {
-                ...data,
-                education: Array.isArray(data.education)
-                    ? data.education
-                    : (data.education ? [data.education] : [])
-            };
-
-            setProfileData(processedData);
+            setProfileData(data);
             setError(null);
         } catch (error) {
             console.error("Error fetching profile:", error);
@@ -58,21 +49,31 @@ const MentorProfile = () => {
         }
     };
 
-const handleProfileUpdate = async (updateData) => {
-    try {
-        setLoading(true);
-        // If we're dealing with an education update specifically
+    const handleProfileUpdate = async (updateData) => {
+        try {
+            setLoading(true);
+            console.log("Updating with:", updateData);
 
-        const updatedProfile = await mentorService.updateMentorProfile(updateData);
-        setProfileData(prevData => ({...prevData, ...updatedProfile}));
-        toast.success("Profile updated successfully");
-    } catch (error) {
-        console.error("Error updating profile:", error);
-        toast.error("Failed to update profile");
-    } finally {
-        setLoading(false);
-    }
-};
+            const updatedProfile = await mentorService.updateMentorProfile(updateData);
+
+            // Important: Make sure to deeply merge the updated data
+            setProfileData(prevData => {
+
+                // Handle the case where updatedProfile might have nested fields
+                return {
+                    ...prevData,
+                    ...updatedProfile,
+                };
+            });
+
+            toast.success("Profile updated successfully");
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            toast.error("Failed to update profile");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (loading && !profileData.name) {
         return <div>Loading profile data...</div>;
@@ -97,15 +98,28 @@ const handleProfileUpdate = async (updateData) => {
                                 data={profileData}
                                 onUpdate={handleProfileUpdate}
                             />
+
+
                             <LocationSection
-                                title={"Location of Work"}
-                                data={profileData.location_of_work}
+                                title="Location of Residence"
+                                data={profileData.location_of_residence || {}} // Ensure data is an object
                                 onUpdate={handleProfileUpdate}
+                                parentKey="location_of_residence"
                             />
 
                             <LocationSection
-                                title={"Location of Residence"}
-                                data={profileData.location_of_residence}
+                                title="Location of Work"
+                                data={profileData.location_of_work || {}} // Ensure data is an object
+                                onUpdate={handleProfileUpdate}
+                                parentKey="location_of_work"
+                            />
+
+
+
+
+                            <HobbiesSection
+                                data={profileData.hobbies || []}
+                                title="Hobbies"
                                 onUpdate={handleProfileUpdate}
                             />
 
