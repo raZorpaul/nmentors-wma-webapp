@@ -1,15 +1,15 @@
-// sections/BasicInfoSection.jsx
 import EditableField from "../../EditableField/EditableField.jsx";
+
 const BasicInfoSection = ({ data, onUpdate }) => {
   const handleFieldUpdate = (field, value) => {
+    // Only send the updated field and its value
     onUpdate({
-      ...data,
       [field]: value,
     });
   };
 
   return (
-    <div className={'basic-info-section'}>
+    <div className={"basic-info-section"}>
       <h3>Basic Information</h3>
       <EditableField
         label="Name"

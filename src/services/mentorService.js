@@ -38,27 +38,35 @@ class MentorService {
   }
 
   // Update mentor profile
-  async updateMentorProfile(updates) {
-      console.log("Sending profile update:", JSON.stringify(updates));
-    try {
-      const response = await fetch(`${this.API_URL}/mentors/profile`, {
-        method: 'PUT',
-        headers: this.getAuthHeader(),
-        body: JSON.stringify(updates)
-      });
+async updateMentorProfile(updates) {
+  console.log("Sending profile update:", JSON.stringify(updates));
+  try {
+    const response = await fetch(`${this.API_URL}/mentors/profile`, {
+      method: 'PUT',
+      headers: this.getAuthHeader(),
+      body: JSON.stringify(updates)
+    });
 
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
-      }
+    // Add this to see the raw response
+    const responseText = await response.text();
+    console.log("Raw response:", responseText);
 
-      return await response.json();
-    } catch (error) {
-      console.error('Failed to update mentor profile:', error);
-      throw error;
+    if (!response.ok) {
+      console.error("Error status:", response.status);
+      console.error("Error response:", responseText);
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
-  }
 
-  // Update specific field
+    // Parse the text response back to JSON
+    const responseData = responseText ? JSON.parse(responseText) : {};
+    return responseData;
+  } catch (error) {
+    console.error('Failed to update mentor profile:', error);
+    throw error;
+  }
+}
+
+    // Update specific field
   async updateField(field, value) {
     return this.updateMentorProfile({ [field]: value });
   }
