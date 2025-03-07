@@ -18,6 +18,35 @@ class MentorService {
     };
   }
 
+  // Register a new mentor
+  async registerMentor(mentorData) {
+    try {
+      console.log("Sending registration data:", JSON.stringify(mentorData));
+      const response = await fetch(`${this.API_URL}/auth/register`, {
+        method: 'POST',
+        headers: this.headers,
+        body: JSON.stringify(mentorData)
+      });
+
+      // Log the raw response for debugging
+      const responseText = await response.text();
+      console.log("Raw response:", responseText);
+
+      if (!response.ok) {
+        console.error("Error status:", response.status);
+        console.error("Error response:", responseText);
+        throw new Error(`Error ${response.status}: ${responseText || response.statusText}`);
+      }
+
+      // Parse the text response back to JSON
+      const responseData = responseText ? JSON.parse(responseText) : {};
+      return responseData;
+    } catch (error) {
+      console.error('Failed to register mentor:', error);
+      throw error;
+    }
+  }
+
   // Get mentor profile
   async getMentorProfile() {
     try {
@@ -38,35 +67,35 @@ class MentorService {
   }
 
   // Update mentor profile
-async updateMentorProfile(updates) {
-  console.log("Sending profile update:", JSON.stringify(updates));
-  try {
-    const response = await fetch(`${this.API_URL}/mentors/profile`, {
-      method: 'PUT',
-      headers: this.getAuthHeader(),
-      body: JSON.stringify(updates)
-    });
+  async updateMentorProfile(updates) {
+    console.log("Sending profile update:", JSON.stringify(updates));
+    try {
+      const response = await fetch(`${this.API_URL}/mentors/profile`, {
+        method: 'PUT',
+        headers: this.getAuthHeader(),
+        body: JSON.stringify(updates)
+      });
 
-    // Add this to see the raw response
-    const responseText = await response.text();
-    console.log("Raw response:", responseText);
+      // Add this to see the raw response
+      const responseText = await response.text();
+      console.log("Raw response:", responseText);
 
-    if (!response.ok) {
-      console.error("Error status:", response.status);
-      console.error("Error response:", responseText);
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+      if (!response.ok) {
+        console.error("Error status:", response.status);
+        console.error("Error response:", responseText);
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+
+      // Parse the text response back to JSON
+      const responseData = responseText ? JSON.parse(responseText) : {};
+      return responseData;
+    } catch (error) {
+      console.error('Failed to update mentor profile:', error);
+      throw error;
     }
-
-    // Parse the text response back to JSON
-    const responseData = responseText ? JSON.parse(responseText) : {};
-    return responseData;
-  } catch (error) {
-    console.error('Failed to update mentor profile:', error);
-    throw error;
   }
-}
 
-    // Update specific field
+  // Update specific field
   async updateField(field, value) {
     return this.updateMentorProfile({ [field]: value });
   }
@@ -77,7 +106,7 @@ async updateMentorProfile(updates) {
       const formData = new FormData();
       formData.append('cv', file);
 
-      const token = localStorage.getItem('authToken');
+      const token = sessionStorage.getItem('token');
 
       const response = await fetch(`${this.API_URL}/upload-cv`, {
         method: 'POST',

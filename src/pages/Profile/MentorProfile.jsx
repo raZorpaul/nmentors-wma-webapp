@@ -10,6 +10,7 @@ import './MentorProfile.scss'
 import LocationSection from "../../components/Sections/LocationSection.jsx";
 // import EducationSection from "../../components/Sections/EducationSection.jsx";
 import HobbiesSection from "../../components/Sections/HobbiesSection.jsx";
+import EducationSection from "../../components/Sections/EducationSection.jsx";
 
 const MentorProfile = () => {
     const [profileData, setProfileData] = useState({
@@ -113,9 +114,6 @@ const MentorProfile = () => {
                                 onUpdate={handleProfileUpdate}
                                 parentKey="location_of_work"
                             />
-
-
-
 
                             <HobbiesSection
                                 data={profileData.hobbies || []}
