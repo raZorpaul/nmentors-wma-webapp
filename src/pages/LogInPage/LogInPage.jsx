@@ -16,7 +16,6 @@ export const  LogInPage= () => {
 					<Column className="login-column">
 						<Tile className="login-column">
 							< LogInForm />
-
 						</Tile>
 					</Column>
 				</Row>

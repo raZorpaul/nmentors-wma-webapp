@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import MentorProfile from "./pages/Profile/MentorProfile.jsx";
 import {mentorData} from "./mentorData.js";
 import {LogInPage} from "./pages/LogInPage/LogInPage.jsx";
+import MentorApplicationForm from "./pages/RegisterPage/MentorSignUp.jsx";
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<LogInPage/>} />
                     <Route path="/profile" element={<MentorProfile initialData={mentorData}/>} />
+                    <Route path="/register" element={<MentorApplicationForm/>} />
                 </Routes>
             </Theme>
         </Providers>
