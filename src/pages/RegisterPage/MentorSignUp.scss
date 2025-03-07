@@ -7,3 +7,14 @@
 .mentor-application {
   margin: $spacing-13;
 }
+
+// Add this to your MentorSignUp.scss
+.cds--progress-step[style*="cursor: pointer"] {
+  .cds--progress-label {
+    text-decoration: underline;
+
+    &:hover {
+      color: #0f62fe; // IBM Carbon blue
+    }
+  }
+}

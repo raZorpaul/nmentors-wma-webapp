@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Form,
   Button,
@@ -12,9 +12,11 @@ import BasicInfoStep from "../../components/Steps/BasicInfoStep.jsx";
 import LocationStep from "../../components/Steps/LocationStep.jsx";
 import EmergencyContactStep from "../../components/Steps/EmergencyContactStep.jsx";
 import mentorService from "../../services/mentorService";
+import {useNavigate} from "react-router-dom";
 
 const MentorApplicationForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [highestStepVisited, setHighestStepVisited] = useState(1);
   const [formData, setFormData] = useState({
     // Basic Info
     name: "",
@@ -52,42 +54,52 @@ const MentorApplicationForm = () => {
       phone: "",
       email: "",
     },
-
-    // Education
-    education: [
-      {
-        level: "",
-        institution: "",
-        location: "",
-        start_year: "",
-        end_year: "",
-        degree: "",
-        certifications: [],
-      },
-    ],
-
-    // Hobbies
-    hobbies: [],
-
-    // Certifications
-    certifications: [
-      {
-        type: "",
-        certification_number: "",
-        issued_by: "",
-        issue_date: "",
-        expiry_date: "",
-        proof_url: "",
-      },
-    ],
   });
 
+  const navigate = useNavigate();
   const [isStepValid, setIsStepValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const totalSteps = 4;
+
+  // Update highest step visited whenever current step changes
+  useEffect(() => {
+    if (currentStep > highestStepVisited) {
+      setHighestStepVisited(currentStep);
+    }
+  }, [currentStep, highestStepVisited]);
+
+  // After component mounts, add click handlers to progress steps
+  useEffect(() => {
+    // Add click event handlers to the step elements
+    const setupClickHandlers = () => {
+      const stepElements = document.querySelectorAll('.cds--progress-step');
+
+      stepElements.forEach((element, index) => {
+        // Only make steps clickable if they've been visited before
+        if (index + 1 <= highestStepVisited) {
+          element.style.cursor = 'pointer';
+
+          // Remove existing listener if any to prevent duplicates
+          const newElement = element.cloneNode(true);
+          element.parentNode.replaceChild(newElement, element);
+
+          newElement.addEventListener('click', () => {
+            setCurrentStep(index + 1);
+          });
+        }
+      });
+    };
+
+    // Add a small delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      setupClickHandlers();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [highestStepVisited, currentStep]);
 
   // Centralized validation logic
   const validateStep = (step) => {
@@ -121,105 +133,103 @@ const MentorApplicationForm = () => {
     }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
-  setSubmitError(null);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError(null);
 
-  // Create a copy of formData and remove empty fields
-  const payload = { ...formData };
+    try {
+      const response = await mentorService.registerMentor(formData);
+      console.log("Registration successful:", response);
+      setSubmitSuccess(true);
+      setTimeout(() => {
+        navigate("/");
+      }, 5000);
+    } catch (error) {
+      console.error("Registration failed:", error);
 
-  // Remove empty education and certifications
-  if (payload.education.length === 0) {
-    delete payload.education;
-  }
-  if (payload.certifications.length === 0) {
-    delete payload.certifications;
-  }
+      if (error.response && error.response.status === 400) {
+        const { message, errors } = error.response.data;
 
-  try {
-    const response = await mentorService.registerMentor(payload);
-    console.log("Registration successful:", response);
-    setSubmitSuccess(true);
-  } catch (error) {
-    console.error("Registration failed:", error);
+        // Handle validation errors
+        const fieldErrors = {};
+        errors.forEach((err) => {
+          const match = err.match(/Path `(.+?)` is required/);
+          if (match) {
+            const fieldName = match[1];
+            fieldErrors[fieldName] = err;
+          }
+        });
 
-    if (error.response && error.response.status === 400) {
-      const { message, errors } = error.response.data;
-
-      // Handle validation errors
-      const fieldErrors = {};
-      errors.forEach((err) => {
-        const match = err.match(/Path `(.+?)` is required/);
-        if (match) {
-          const fieldName = match[1];
-          fieldErrors[fieldName] = err;
-        }
-      });
-
-      setSubmitError(message);
-      setFieldErrors(fieldErrors);
-    } else {
-      setSubmitError(error.message || "Registration failed. Please try again.");
+        setSubmitError(message);
+        // Remove or implement setFieldErrors if needed
+      } else {
+        setSubmitError(error.message || "Registration failed. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
-  } finally {
-    setIsSubmitting(false);
+  };
+
+  const renderStep = () => {
+  console.log("Current Step:", currentStep);
+  console.log("Form Data:", formData);
+
+  switch (currentStep) {
+    case 1:
+      return (
+        <BasicInfoStep
+          formData={formData}
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              [e.target.name]: e.target.value,
+            }))
+          }
+          onValidate={setIsStepValid}
+        />
+      );
+    case 2:
+      return (
+        <LocationStep
+          formData={formData}
+          onChange={handleInputChange}
+          onValidate={setIsStepValid}
+          type="location_of_residence"
+        />
+      );
+    case 3:
+      return (
+        <LocationStep
+          formData={formData}
+          onChange={handleInputChange}
+          onValidate={setIsStepValid}
+          type="location_of_work"
+        />
+      );
+    case 4:
+      return (
+        <EmergencyContactStep
+          formData={formData}
+          onChange={handleInputChange}
+          onValidate={setIsStepValid}
+        />
+      );
+    default:
+      return null;
   }
 };
 
-
-  const renderStep = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <BasicInfoStep
-            formData={formData}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                [e.target.name]: e.target.value,
-              }))
-            }
-            onValidate={setIsStepValid}
-          />
-        );
-              case 2:
-        return (
-          <LocationStep
-            formData={formData}
-            onChange={handleInputChange}
-            onValidate={setIsStepValid}
-            type="location_of_residence"
-          />
-        );
-      case 3:
-        return (
-          <LocationStep
-            formData={formData}
-            onChange={handleInputChange}
-            onValidate={setIsStepValid}
-            type="location_of_work"
-          />
-        );
-      case 4:
-        return (
-          <EmergencyContactStep
-            formData={formData}
-            onChange={handleInputChange}
-            onValidate={setIsStepValid}
-          />
-        );
-      default:
-        return null;
-    }
-  };
 
   return (
     <div className="mentor-application">
       <h1>Mentor Application Form</h1>
 
       <ProgressIndicator currentIndex={currentStep - 1} spaceEqually>
-        <ProgressStep label="Basic Info" complete={currentStep > 1} />
+        <ProgressStep
+          label="Basic Info"
+          complete={currentStep > 1}
+        />
         <ProgressStep
           label="Residence Location"
           complete={currentStep > 2}
@@ -274,7 +284,7 @@ const handleSubmit = async (e) => {
             </Button>
           )}
           {currentStep === totalSteps && (
-            <Button type="submit" disabled={isSubmitting || !isStepValid}>
+            <Button type="submit" disabled={isSubmitting || !isStepValid || submitSuccess}>
               {isSubmitting ? "Submitting..." : "Submit"}
             </Button>
           )}

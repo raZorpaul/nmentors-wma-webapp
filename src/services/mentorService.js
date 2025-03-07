@@ -21,6 +21,7 @@ class MentorService {
   // Register a new mentor
   async registerMentor(mentorData) {
     try {
+      console.log("API_URL:", this.API_URL);
       console.log("Sending registration data:", JSON.stringify(mentorData));
       const response = await fetch(`${this.API_URL}/auth/register`, {
         method: 'POST',
@@ -165,6 +166,25 @@ class MentorService {
       throw error;
     }
   }
+
+  //CHECK EMAIL
+  async checkEmail(email) {
+    console.log(this.API_URL)
+  try {
+    const response = await fetch(`${this.API_URL}/auth/check-email?email=${encodeURIComponent(email)}`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    return await response.json(); // Parse JSON response properly
+  } catch (error) {
+    console.error("Failed to check email:", error);
+    throw error;
+  }
+}
 }
 
 // Create a singleton instance
