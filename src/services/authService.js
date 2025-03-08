@@ -34,10 +34,10 @@ class AuthService {
       const data = await response.json();
 
       const isSuccessful =
-        response.ok &&
-        (data.success ||
-          data.message?.toLowerCase().includes("successful") ||
-          data.token);
+          response.ok &&
+          (data.success ||
+              data.message?.toLowerCase().includes("successful") ||
+              data.token);
 
       if (isSuccessful) {
         if (data.token) {
@@ -90,7 +90,7 @@ class AuthService {
         console.error("Error status:", response.status);
         console.error("Error response:", responseText);
         throw new Error(
-          `Error ${response.status}: ${responseText || response.statusText}`
+            `Error ${response.status}: ${responseText || response.statusText}`
         );
       }
 
@@ -139,6 +139,34 @@ class AuthService {
     }
   }
 
-}
 
+  /**
+   * Forgot Password
+   * @param {String} email - Mentor's email
+   * @returns {Object} - The response object with success and message/error
+   */
+  async forgotPassword(email) {
+    try {
+      const response = await fetch(`${this.API_URL}/auth/forgot-password`, {
+        method: "POST",
+        headers: this.headers,
+        body: JSON.stringify({email}),
+      });
+
+      // Check if the response has a body
+      let data = {};
+      if (response.headers.get("Content-Type")?.includes("application/json")) {
+        data = await response.json();
+      }
+
+      if (response.ok) {
+        return {success: true, message: data.message || "Password reset link sent successfully."};
+      } else {
+        return {success: false, error: data.error || "An error occurred. Please try again."};
+      }
+    } catch (err) {
+      return {success: false, error: err.message || "An unexpected error occurred."};
+    }
+  }
+}
 export default new AuthService();
