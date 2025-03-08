@@ -8,6 +8,7 @@ import {LogInPage} from "./pages/LogInPage/LogInPage.jsx";
 import MentorApplicationForm from "./pages/RegisterPage/MentorSignUp.jsx";
 import CreatePassword from "./pages/createPassword/CreatePassword.jsx";
 import ForgotPassword from "./pages/forgotPassword/ForgotPassword.jsx";
+import ResetPassword from "./pages/resetPassword/ResetPassword.jsx";
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
                     <Route path="/register" element={<MentorApplicationForm/>} />
                     <Route path="/api/mentor/create-password" element={<CreatePassword />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
                 </Routes>
             </Theme>
         </Providers>

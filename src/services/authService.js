@@ -139,6 +139,57 @@ class AuthService {
     }
   }
 
+/**
+   * Validate the reset token
+   * @param {string} token - The reset token
+   * @returns {Promise<{ success: boolean, message: string }>}
+   */
+  async validateResetToken(token) {
+    try {
+      const response = await fetch(`${this.API_URL}/auth/validate-reset-token?token=${token}`, {
+        method: "GET",
+        headers: this.headers,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        return { success: true, message: data.message || "Token is valid." };
+      } else {
+        return { success: false, message: data.error || "Invalid or expired token." };
+      }
+    } catch (err) {
+      console.error("Error validating reset token:", err);
+      return { success: false, message: "An error occurred while validating the token." };
+    }
+  }
+
+  /**
+   * Reset the password
+   * @param {string} token - The reset token
+   * @param {string} password - The new password
+   * @returns {Promise<{ success: boolean, message: string }>}
+   */
+  async resetPassword(token, password) {
+    try {
+      const response = await fetch(`${this.API_URL}/auth/reset-password`, {
+        method: "POST",
+        headers: this.headers,
+        body: JSON.stringify({ token, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        return { success: true, message: data.message || "Password reset successfully." };
+      } else {
+        return { success: false, message: data.error || "Failed to reset password." };
+      }
+    } catch (err) {
+      console.error("Error resetting password:", err);
+      return { success: false, message: "An error occurred while resetting the password." };
+    }
+  }
 
   /**
    * Forgot Password
