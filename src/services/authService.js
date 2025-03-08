@@ -1,57 +1,144 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const login = async (formData) => {
+class AuthService {
+  constructor() {
+    this.API_URL = API_URL;
+    this.headers = {
+      "Content-Type": "application/json",
+    };
+  }
+
+  /**
+   * Login a user
+   * @param {Object} formData - The login form data (e.g., email and password)
+   * @returns {Object} - The response object with success, token, and message
+   */
+  async login(formData) {
     try {
-        console.log(API_URL+`/auth/login`);
-        const response = await fetch(`${API_URL}/auth/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-        });
+      console.log(`${this.API_URL}/auth/login`);
+      const response = await fetch(`${this.API_URL}/auth/login`, {
+        method: "POST",
+        headers: this.headers,
+        body: JSON.stringify(formData),
+      });
 
-        // Check if the response is OK before parsing JSON
-        if (!response.ok) {
-            return {
-                success: false,
-                message: `Request failed with status ${response.status}`,
-                status: response.status,
-            };
-        }
-
-        const data = await response.json();
-
-        const isSuccessful =
-            response.ok &&
-            (data.success ||
-                data.message?.toLowerCase().includes('successful') ||
-                data.token);
-
-        if (isSuccessful) {
-            if (data.token) {
-                sessionStorage.clear();
-                sessionStorage.setItem("token", data.token);
-            }
-
-            return {
-                success: true,
-                token: data.token,
-                message: data.message || "Login successful",
-            };
-        } else {
-            return {
-                success: false,
-                message: data.message || "Login failed",
-                status: response.status,
-            };
-        }
-    } catch (err) {
-        console.error("Error during login:", err);
+      // Check if the response is OK before parsing JSON
+      if (!response.ok) {
         return {
-            success: false,
-            message: "Network error or unexpected issue occurred",
-            error: err.message,
+          success: false,
+          message: `Request failed with status ${response.status}`,
+          status: response.status,
         };
+      }
+
+      const data = await response.json();
+
+      const isSuccessful =
+        response.ok &&
+        (data.success ||
+          data.message?.toLowerCase().includes("successful") ||
+          data.token);
+
+      if (isSuccessful) {
+        if (data.token) {
+          sessionStorage.clear();
+          sessionStorage.setItem("token", data.token);
+        }
+
+        return {
+          success: true,
+          token: data.token,
+          message: data.message || "Login successful",
+        };
+      } else {
+        return {
+          success: false,
+          message: data.message || "Login failed",
+          status: response.status,
+        };
+      }
+    } catch (err) {
+      console.error("Error during login:", err);
+      return {
+        success: false,
+        message: "Network error or unexpected issue occurred",
+        error: err.message,
+      };
     }
-};
+  }
+
+  /**
+   * Register a mentor
+   * @param {Object} mentorData - The mentor registration data
+   * @returns {Object} - The response data from the server
+   */
+  async registerMentor(mentorData) {
+    try {
+      console.log("API_URL:", this.API_URL);
+      console.log("Sending registration data:", JSON.stringify(mentorData));
+      const response = await fetch(`${this.API_URL}/auth/register`, {
+        method: "POST",
+        headers: this.headers,
+        body: JSON.stringify(mentorData),
+      });
+
+      // Log the raw response for debugging
+      const responseText = await response.text();
+      console.log("Raw response:", responseText);
+
+      if (!response.ok) {
+        console.error("Error status:", response.status);
+        console.error("Error response:", responseText);
+        throw new Error(
+          `Error ${response.status}: ${responseText || response.statusText}`
+        );
+      }
+
+      // Parse the text response back to JSON
+      const responseData = responseText ? JSON.parse(responseText) : {};
+      return responseData;
+    } catch (error) {
+      console.error("Failed to register mentor:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Validate a token
+   * @param {string} token - The token to validate
+   * @returns {Object} - The response object with success and message
+   */
+  async validateToken(token) {
+    try {
+      console.log(`${this.API_URL}/auth/validate-token`);
+      const response = await fetch(`${this.API_URL}/auth/validate-token?token=${token}`, {
+        method: "GET",
+        headers: this.headers,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return {
+          success: false,
+          message: errorData.error || `Request failed with status ${response.status}`,
+        };
+      }
+
+      const data = await response.json();
+      return {
+        success: true,
+        message: data.message || "Token is valid",
+      };
+    } catch (err) {
+      console.error("Error during token validation:", err);
+      return {
+        success: false,
+        message: "Network error or unexpected issue occurred",
+        error: err.message,
+      };
+    }
+  }
+
+}
+
+export default new AuthService();

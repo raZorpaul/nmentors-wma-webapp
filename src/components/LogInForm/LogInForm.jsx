@@ -9,7 +9,7 @@ import {
   PasswordInput,
   Link,
 } from "@carbon/react";
-import { login } from "../../services/authService";
+import authService from "../../services/authService";
 import { useNavigate } from "react-router-dom"; // Import login function
 
 export const LogInForm = () => {
@@ -37,7 +37,7 @@ export const LogInForm = () => {
     setError(null);
 
     try {
-      const result = await login(formData);
+      const result = await authService.login(formData);
 
       if (result.success) {
         setSuccess(true);
