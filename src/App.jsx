@@ -2,12 +2,12 @@ import './App.scss'
 import Providers from "./Providers.jsx";
 import {Theme} from "@carbon/react";
 import {Route, Routes} from "react-router-dom";
-import Dashboard from "./pages/Dashboard.jsx";
 import MentorProfile from "./pages/Profile/MentorProfile.jsx";
 import {mentorData} from "./mentorData.js";
 import {LogInPage} from "./pages/LogInPage/LogInPage.jsx";
 import MentorApplicationForm from "./pages/RegisterPage/MentorSignUp.jsx";
 import CreatePassword from "./pages/createPassword/CreatePassword.jsx";
+import ForgotPassword from "./pages/forgotPassword/ForgotPassword.jsx";
 
 function App() {
 
@@ -19,7 +19,7 @@ function App() {
                     <Route path="/profile" element={<MentorProfile initialData={mentorData}/>} />
                     <Route path="/register" element={<MentorApplicationForm/>} />
                     <Route path="/api/mentor/create-password" element={<CreatePassword />} />
-
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
                 </Routes>
             </Theme>
         </Providers>
