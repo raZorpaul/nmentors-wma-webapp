@@ -9,6 +9,10 @@ import MentorApplicationForm from "./pages/RegisterPage/MentorSignUp.jsx";
 import CreatePassword from "./pages/createPassword/CreatePassword.jsx";
 import ForgotPassword from "./pages/forgotPassword/ForgotPassword.jsx";
 import ResetPassword from "./pages/resetPassword/ResetPassword.jsx";
+import FeedNav from "./pages/FeedNav/FeedNav.jsx";
+import TenderDetails from "./pages/TenderDetails/TenderDetails.jsx";
+import CVUpload from "./components/Steps/uploadCV.jsx";
+import CertificateUploader from "./components/Steps/certificateUploader.jsx";
 
 function App() {
 
@@ -22,6 +26,12 @@ function App() {
                     <Route path="/api/mentor/create-password" element={<CreatePassword />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path="/feed" element={<FeedNav />} />
+                    <Route path="/tenders/:id" element={<TenderDetails />} />
+                    <Route path="/certificate"element={<CertificateUploader/>} />
+
+                    {/*<Route path="/upload" element={<CVUpload />} />*/}
+
                 </Routes>
             </Theme>
         </Providers>

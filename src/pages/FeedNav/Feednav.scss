@@ -1,0 +1,34 @@
+.feed-nav {
+  padding: 2rem;
+  background-color: #f4f4f4;
+}
+
+.feed-nav h2 {
+  margin-bottom: 1rem;
+}
+
+.tender-feed {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.tender-tile {
+  padding: 1rem;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tender-tile h3 {
+  margin-bottom: 0.5rem;
+}
+
+.tender-tile p {
+  margin: 0.25rem 0;
+}
+
+.tender-tile a {
+  text-decoration: none;
+}

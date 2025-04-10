@@ -21,49 +21,11 @@ class AuthService {
         headers: this.headers,
         body: JSON.stringify(formData),
       });
-
-      // Check if the response is OK before parsing JSON
-      if (!response.ok) {
-        return {
-          success: false,
-          message: `Request failed with status ${response.status}`,
-          status: response.status,
-        };
-      }
-
-      const data = await response.json();
-
-      const isSuccessful =
-          response.ok &&
-          (data.success ||
-              data.message?.toLowerCase().includes("successful") ||
-              data.token);
-
-      if (isSuccessful) {
-        if (data.token) {
-          sessionStorage.clear();
-          sessionStorage.setItem("token", data.token);
-        }
-
-        return {
-          success: true,
-          token: data.token,
-          message: data.message || "Login successful",
-        };
-      } else {
-        return {
-          success: false,
-          message: data.message || "Login failed",
-          status: response.status,
-        };
-      }
-    } catch (err) {
-      console.error("Error during login:", err);
-      return {
-        success: false,
-        message: "Network error or unexpected issue occurred",
-        error: err.message,
-      };
+         const responseData = await response.json();
+    return responseData;
+    } catch (error){
+      console.error("Error during login:", error);
+      throw error;
     }
   }
 
@@ -72,36 +34,35 @@ class AuthService {
    * @param {Object} mentorData - The mentor registration data
    * @returns {Object} - The response data from the server
    */
-  async registerMentor(mentorData) {
-    try {
-      console.log("API_URL:", this.API_URL);
-      console.log("Sending registration data:", JSON.stringify(mentorData));
-      const response = await fetch(`${this.API_URL}/auth/register`, {
-        method: "POST",
-        headers: this.headers,
-        body: JSON.stringify(mentorData),
-      });
+    async registerMentor(mentorData) {
+        try {
+            console.log("API_URL:", this.API_URL);
+            console.log("Sending registration data:", JSON.stringify(mentorData));
+            const response = await fetch(`${this.API_URL}/auth/register`, {
+                method: 'POST',
+                headers: this.headers,
+                body: JSON.stringify(mentorData)
+            });
 
-      // Log the raw response for debugging
-      const responseText = await response.text();
-      console.log("Raw response:", responseText);
+            // Log the raw response for debugging
+            const responseText = await response.text();
+            console.log("Raw response:", responseText);
 
-      if (!response.ok) {
-        console.error("Error status:", response.status);
-        console.error("Error response:", responseText);
-        throw new Error(
-            `Error ${response.status}: ${responseText || response.statusText}`
-        );
-      }
+            if (!response.ok) {
+                console.error("Error status:", response.status);
+                console.error("Error response:", responseText);
+                throw new Error(`Error ${response.status}: ${responseText || response.statusText}`);
+            }
 
-      // Parse the text response back to JSON
-      const responseData = responseText ? JSON.parse(responseText) : {};
-      return responseData;
-    } catch (error) {
-      console.error("Failed to register mentor:", error);
-      throw error;
+            // Parse the text response back to JSON
+            const responseData = responseText ? JSON.parse(responseText) : {};
+            return responseData;
+        } catch (error) {
+            console.error('Failed to register mentor:', error);
+            throw error;
+        }
     }
-  }
+
 
   /**
    * Validate a token

@@ -1,0 +1,98 @@
+// TenderDetails.scss
+
+.tender-details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+
+  .tender-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+
+    h1 {
+      margin: 0 0 0.5rem 0;
+      font-weight: 400;
+    }
+
+    .tender-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .tender-client {
+        color: #525252;
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  .tender-tabs {
+    margin-bottom: 1.5rem;
+  }
+
+  .tender-content {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+
+    h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-weight: 400;
+    }
+
+    .tender-description {
+      p {
+        line-height: 1.5;
+        color: #525252;
+      }
+    }
+  }
+
+  .document-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    .document-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #e0e0e0;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      svg {
+        margin-right: 0.75rem;
+        color: #0f62fe;
+      }
+
+      a {
+        flex-grow: 1;
+        margin-right: 1rem;
+        text-decoration: none;
+        color: #0f62fe;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  // Carbon component overrides
+  .cds--structured-list {
+    margin-bottom: 0;
+  }
+
+  .cds--structured-list-row {
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .cds--structured-list-cell {
+    padding: 1rem 1rem 1rem 0;
+  }
+}

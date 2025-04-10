@@ -4,6 +4,11 @@
 @use '@carbon/react/scss/theme' as *;
 @use '@carbon/styles/scss/type' as *;
 
+.login-form {
+  > * {
+    margin-bottom: $spacing-07;
+  }
+}
 .login-title {
   margin-bottom: $spacing-05;
   h1 {

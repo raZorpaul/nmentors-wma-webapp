@@ -18,35 +18,6 @@ class MentorService {
         };
     }
 
-    // Register a new mentor
-    async registerMentor(mentorData) {
-        try {
-            console.log("API_URL:", this.API_URL);
-            console.log("Sending registration data:", JSON.stringify(mentorData));
-            const response = await fetch(`${this.API_URL}/auth/register`, {
-                method: 'POST',
-                headers: this.headers,
-                body: JSON.stringify(mentorData)
-            });
-
-            // Log the raw response for debugging
-            const responseText = await response.text();
-            console.log("Raw response:", responseText);
-
-            if (!response.ok) {
-                console.error("Error status:", response.status);
-                console.error("Error response:", responseText);
-                throw new Error(`Error ${response.status}: ${responseText || response.statusText}`);
-            }
-
-            // Parse the text response back to JSON
-            const responseData = responseText ? JSON.parse(responseText) : {};
-            return responseData;
-        } catch (error) {
-            console.error('Failed to register mentor:', error);
-            throw error;
-        }
-    }
 
     // Get mentor profile
     async getMentorProfile() {
@@ -107,19 +78,16 @@ class MentorService {
             const formData = new FormData();
             formData.append('cv', file);
 
-            const token = sessionStorage.getItem('token');
+            // const token = sessionStorage.getItem('token');
 
-            const response = await fetch(`${this.API_URL}/upload-cv`, {
+            const response = await fetch(`${this.API_URL}/mentors/upload-cv`, {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
                 body: formData
             });
 
-            if (!response.ok) {
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
-            }
+            // if (!response.ok) {
+            //     throw new Error(`Error ${response.status}: ${response.statusText}`);
+            // }
 
             return await response.json();
         } catch (error) {
@@ -128,24 +96,64 @@ class MentorService {
         }
     }
 
-    // Get mentor expertise
-    async getMentorExpertise() {
-        try {
-            const response = await fetch(`${this.API_URL}/expertise`, {
-                method: 'GET',
-                headers: this.getAuthHeader()
-            });
+    //delete file
+    async deleteFile(fileKey) {
+    try {
+        // Create the JSON payload with the fileKey
+        const payload = { fileKey };
 
-            if (!response.ok) {
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
-            }
+        // Make the DELETE request to the backend
+        const response = await fetch(`${this.API_URL}/mentors/delete-file`, {
+            method: 'DELETE', // Use DELETE method
+            headers: {
+                'Content-Type': 'application/json', // Set the content type to JSON
+            },
+            body: JSON.stringify(payload), // Convert the payload to a JSON string
+        });
 
-            return await response.json();
-        } catch (error) {
-            console.error('Failed to fetch mentor expertise:', error);
-            throw error;
+        // Check if the response is successful
+        if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
+
+        // Parse and return the JSON response
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to delete CV:', error);
+        throw error;
     }
+}
+
+async uploadCertificates(files) {
+    try {
+        const formData = new FormData();
+
+        // Loop through the files and append each one to the FormData object
+        for (const file of files) {
+            formData.append('certificates', file); // 'certificates' is the field name expected by the backend
+        }
+
+        const response = await fetch(`${this.API_URL}/mentors/upload-certificates`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        // Check if the response is not OK
+        if (!response.ok) {
+            const errorData = await response.json(); // Parse error response
+            throw new Error(
+                `Error ${response.status}: ${errorData.message || response.statusText}`
+            );
+        }
+
+        // Parse and return the JSON response
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to upload certificates:', error.message);
+        throw error; // Re-throw the error to handle it in the calling function
+    }
+}
+
 
     // Update mentor expertise
     async updateExpertise(expertise) {
@@ -186,6 +194,7 @@ class MentorService {
         }
     }
 
+    //create a password
     async createPassword({token, password}) {
         try {
             console.log(`${this.API_URL}/mentors/create-password`, token, password);
@@ -194,19 +203,23 @@ class MentorService {
                 headers: this.headers,
                 body: JSON.stringify({token, password}),
             });
-
+            // eslint-disable-next-line no-debugger
             const data = await response.json();
 
             if (!response.ok) {
                 throw new Error(data.error || `Error ${response.status}`);
             }
 
+            console.log(data);
             return data;
         } catch (error) {
             console.error("Failed to set password:", error);
             throw error;
         }
     }
+
+
+
 }
 
 
